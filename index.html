@@ -544,6 +544,7 @@ function endLP(){
   if(lpTimer){ clearTimeout(lpTimer); lpTimer=null; }
 }
 function showCtx(e, id){
+  if(!ADMINS.includes(me)) return;
   ctxId=id;
   const ctx=document.getElementById('ctx');
   ctx.classList.add('on');
@@ -554,12 +555,11 @@ function showCtx(e, id){
   ctx.style.left = Math.min(x, window.innerWidth-cw-10)+'px';
   ctx.style.top  = Math.min(y, window.innerHeight-ch-10)+'px';
   const items=ctx.querySelectorAll('.ctxi');
-  const isAdmin=ADMINS.includes(me);
   items[0].style.display='flex';
   items[1].style.display='flex';
   items[2].style.display='flex';
-  items[3].style.display=isAdmin?'flex':'none';
-  items[4].style.display=isAdmin?'flex':'none';
+  items[3].style.display='flex';
+  items[4].style.display='flex';
 }
 function closeCtx(){
   document.getElementById('ctx').classList.remove('on');
