@@ -434,7 +434,7 @@ function adminLogin(n){
   setTimeout(()=>document.getElementById('pw-input').focus(),100);
 }
 function checkPw(){
-  const v=document.getElementById('pw-input').value;
+  const v=document.getElementById('pw-input').value.trim().replace(/\s/g,'');
   if(v===ADMIN_PASS){ closePwModal(); login(_pendingAdmin,'admin'); }
   else{ document.getElementById('pw-err').style.display='block'; document.getElementById('pw-input').value=''; }
 }
