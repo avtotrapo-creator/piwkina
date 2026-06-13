@@ -549,10 +549,12 @@ function showCtx(e, id){
   const cw=ctx.offsetWidth||200, ch=ctx.offsetHeight||220;
   ctx.style.left = Math.min(x, window.innerWidth-cw-10)+'px';
   ctx.style.top  = Math.min(y, window.innerHeight-ch-10)+'px';
-  const isAdmin=ADMINS.includes(me);
-  ctx.querySelectorAll('.ctxi')[1].style.display='flex'; // კურიერი - ყველას
-  ctx.querySelectorAll('.ctxi')[3].style.display=isAdmin?'flex':'none';
-  ctx.querySelectorAll('.ctxi')[4].style.display=isAdmin?'flex':'none';
+  const items=ctx.querySelectorAll('.ctxi');
+  items[0].style.display='flex';
+  items[1].style.display='flex';
+  items[2].style.display='flex';
+  items[3].style.display='flex';
+  items[4].style.display='flex';
 }
 function closeCtx(){
   document.getElementById('ctx').classList.remove('on');
