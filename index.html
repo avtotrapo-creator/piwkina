@@ -734,12 +734,21 @@ function render(){
   let html='';
 
   if(tab==='orders'){
-    list.forEach(o=>{
-      const ctag=o.courier?(CT[o.courier]||''):'';
-      const ph=(o.phone||'').replace(/\s/g,'');
-      const bk=slotBucket(o.raw||'');
-      const bcol=bk<3?SLOT_COL[bk]:'#c0392b';
-      html+=cardHtml(o, ph, ctag, bcol, true);
+    const byDate={};
+    list.forEach(o=>{ if(!byDate[o.date]) byDate[o.date]=[]; byDate[o.date].push(o); });
+    Object.keys(byDate).sort().reverse().forEach(d=>{
+      html+=`<div style="display:flex;align-items:center;gap:0;margin:18px 0 10px;border-radius:12px;overflow:hidden;background:#c0392b">
+        <div style="flex:1;height:36px;background:#c0392b;display:flex;align-items:center;justify-content:center">
+          <span style="font-size:14px;font-weight:900;color:#fff;letter-spacing:1px">📅 ${dayName(d)}</span>
+        </div>
+      </div>`;
+      byDate[d].forEach(o=>{
+        const ctag=o.courier?(CT[o.courier]||''):'';
+        const ph=(o.phone||'').replace(/\s/g,'');
+        const bk=slotBucket(o.raw||'');
+        const bcol=bk<3?SLOT_COL[bk]:'#c0392b';
+        html+=cardHtml(o, ph, ctag, bcol, false);
+      });
     });
   } else {
     const byDate={};
