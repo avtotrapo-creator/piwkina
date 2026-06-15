@@ -162,6 +162,19 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; backg
 /* DARK MODE */
 
 .card-text { color:#222; }
+
+body.dark .sloth { color:#aaa; }
+body.dark .empty { color:#666; }
+body.dark .cname { color:#eee; }
+body.dark .crow { color:#ddd; }
+body.dark .crow.weight { color:#ff6b6b; }
+body.dark .edit-row label { color:#aaa; }
+body.dark .edit-row textarea { background:#2a2a2a; border-color:#444; color:#f0f0f0; }
+
+body.dark * { color: inherit; }
+body.dark .card { color: #f0f0f0; }
+body.dark .stat { color: #f0f0f0; }
+
 .card-hint { color:#555; }
 .date-badge { color:#777; }
 body.dark .card-text { color:#f0f0f0; }
@@ -1042,7 +1055,7 @@ function cardHtml(o, ph, ctag, bcol, showDate){
     <div style="padding:12px 14px 8px;display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
       <div style="flex:1">
         ${ph?`<a class="phonebtn" href="tel:${esc(ph)}" style="margin-bottom:6px;display:inline-flex">📞 ${esc(o.phone)}</a>`:''}
-        <div style="font-size:15px;color:#222;white-space:pre-line;line-height:1.65;margin-top:${ph?'6':'0'}px">${esc(o.raw||'')}</div>
+        <div class="card-text" style="font-size:15px;white-space:pre-line;line-height:1.65;margin-top:${ph?'6':'0'}px">${esc(o.raw||'')}</div>
       </div>
       <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:4px">
         ${dateBadge}
