@@ -219,6 +219,18 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; backg
       <div class="stat"><div class="snum" id="s-wait" style="color:#f39c12">0</div><div class="slbl">დღეს მოლოდინი</div></div>
       <div class="stat"><div class="snum" id="s-done" style="color:#27ae60">0</div><div class="slbl">მიტანილი</div></div>
     </div>
+
+    <!-- COURIER STATS -->
+    <div id="courier-stats" style="display:none;background:#fff;border-radius:14px;padding:14px 16px;margin-bottom:14px;box-shadow:0 1px 6px rgba(0,0,0,.05)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div style="font-size:11px;font-weight:800;color:#bbb;text-transform:uppercase;letter-spacing:.6px">კურიერები</div>
+        <div style="display:flex;gap:6px">
+          <button id="cs-btn-month" onclick="setCsPeriod('month')" style="padding:4px 10px;border-radius:10px;border:none;font-size:11px;font-weight:800;cursor:pointer;background:#c0392b;color:#fff">ამ თვეს</button>
+          <button id="cs-btn-all" onclick="setCsPeriod('all')" style="padding:4px 10px;border-radius:10px;border:none;font-size:11px;font-weight:800;cursor:pointer;background:#f0f0f0;color:#888">სულ</button>
+        </div>
+      </div>
+      <div id="cs-rows"></div>
+    </div>
     <div class="stats" id="dstats" style="display:none;grid-template-columns:1fr 1fr 1fr 1fr">
       <div class="stat"><div class="snum" id="ds-total" style="color:#c0392b">0</div><div class="slbl">სულ</div></div>
       <div class="stat"><div class="snum" id="ds-am" style="color:#f39c12">0</div><div class="slbl">🏃 დილა</div></div>
@@ -747,6 +759,49 @@ function tabToDate(t){
   return null;
 }
 
+let csPeriod='month';
+function setCsPeriod(p){
+  csPeriod=p;
+  const mb=document.getElementById('cs-btn-month');
+  const ab=document.getElementById('cs-btn-all');
+  if(mb){mb.style.background=p==='month'?'#c0392b':'#f0f0f0';mb.style.color=p==='month'?'#fff':'#888';}
+  if(ab){ab.style.background=p==='all'?'#c0392b':'#f0f0f0';ab.style.color=p==='all'?'#fff':'#888';}
+  renderCourierStats();
+}
+function renderCourierStats(){
+  const el=document.getElementById('cs-rows'); if(!el) return;
+  const all=load();
+  const now=new Date();
+  const monthStart=new Date(now.getFullYear(),now.getMonth(),1).getTime();
+  const src=csPeriod==='month'?all.filter(o=>o.id>=monthStart):all;
+  const couriers=[['ანდრო','🚙'],['ლევანი','🚗'],['ბექა','🚐']];
+  const GEO_MONTHS=['იანვარი','თებერვალი','მარტი','აპრილი','მაისი','ივნისი','ივლისი','აგვისტო','სექტემბერი','ოქტომბერი','ნოემბერი','დეკემბერი'];
+  let html='';
+  couriers.forEach(([name,ic],i)=>{
+    const assigned=src.filter(o=>o.courier===name);
+    const done=assigned.filter(o=>o.done).length;
+    const total=assigned.length;
+    const pct=total>0?Math.round(done/total*100):0;
+    html+=`<div style="display:flex;align-items:center;gap:10px;padding:9px 0;${i<2?'border-bottom:1px solid #f5f5f5':''}">
+      <span style="font-size:22px">${ic}</span>
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:800">${name}</div>
+        <div style="height:4px;background:#f0f0f0;border-radius:4px;margin-top:5px">
+          <div style="height:4px;background:#27ae60;border-radius:4px;width:${pct}%"></div>
+        </div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:16px;font-weight:900;color:#27ae60">${done}<span style="font-size:11px;color:#bbb;font-weight:600"> ✓</span></div>
+        <div style="font-size:10px;color:#bbb">${total} სულ</div>
+      </div>
+    </div>`;
+  });
+  if(csPeriod==='month'){
+    html+=`<div style="font-size:10px;color:#ccc;margin-top:8px;text-align:center">${GEO_MONTHS[now.getMonth()]} ${now.getFullYear()}</div>`;
+  }
+  el.innerHTML=html;
+}
+
 function render(){
   const all=load();
   const cdn=document.getElementById('cal-day-num');
@@ -757,6 +812,9 @@ function render(){
   const isOrdersTab = tab==='orders';
   document.getElementById('stats').style.display  = (ADMINS.includes(me) && isOrdersTab) ? 'grid' : 'none';
   document.getElementById('dstats').style.display = (!isOrdersTab) ? 'grid' : 'none';
+  const csEl=document.getElementById('courier-stats');
+  if(csEl) csEl.style.display=(ADMINS.includes(me)&&isOrdersTab)?'block':'none';
+  if(ADMINS.includes(me)&&isOrdersTab) renderCourierStats();
 
   if(!isOrdersTab){
     const fd=tabToDate(tab)||today();
