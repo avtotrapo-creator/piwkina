@@ -961,7 +961,7 @@ function render(){
       const old=el.querySelector('.tbadge'); if(old) old.remove();
       const fd=tabToDate(t);
       const base=(t==='orders'||!fd)?all:all.filter(o=>o.date===fd);
-      const cnt=base.filter(o=>!o.done).length;
+      const cnt=base.length;
       if(cnt){
         const sp=document.createElement('span'); sp.className='tbadge'; sp.textContent=cnt;
         sp.style.pointerEvents='none'; sp.style.position='relative'; sp.style.zIndex='1';
