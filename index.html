@@ -916,8 +916,6 @@ function render(){
     if(fd) list=list.filter(o=>o.date===fd);
     list.sort((a,b)=>{
       if(a.date!==b.date) return a.date.localeCompare(b.date);
-      const sb=slotBucket(a.raw||'')-slotBucket(b.raw||'');
-      if(sb!==0) return sb;
       return a.id-b.id;
     });
   }
