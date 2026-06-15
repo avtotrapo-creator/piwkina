@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="პიწკინა">
 <meta name="theme-color" content="#c0392b">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23c0392b'/%3E%3Ctext y='.9em' font-size='72' x='12' font-family='Apple Color Emoji,Segoe UI Emoji,sans-serif'%3E%F0%9F%90%B7%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj4KPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNTAiIGZpbGw9IiNlYjE5MzkiLz4KPGVsbGlwc2UgY3g9IjUwIiBjeT0iNTciIHJ4PSIyNiIgcnk9IjI4IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxwYXRoIGQ9Ik0gMjggNDAgUSAyMCAxOCAzOCAxNCBRIDU0IDExIDUxIDM1IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CjxwYXRoIGQ9Ik0gNzIgNDAgUSA4MCAxOCA2MiAxNCBRIDQ2IDExIDQ5IDM1IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CjxwYXRoIGQ9Ik0gNTcgNDcgUSA2NCAzMiA2OCAyMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjMuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxwYXRoIGQ9Ik0gNTEgMzggUSA1OCAyMyA2MiAxMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjMuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxjaXJjbGUgY3g9IjQwIiBjeT0iNDkiIHI9IjMiIGZpbGw9IiNmZmYiLz4KPGNpcmNsZSBjeD0iNjAiIGN5PSI0OSIgcj0iMyIgZmlsbD0iI2ZmZiIvPgo8ZWxsaXBzZSBjeD0iNTAiIGN5PSI2OCIgcng9IjE0IiByeT0iMTEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSI0Ii8+CjxjaXJjbGUgY3g9IjQ0LjUiIGN5PSI2OSIgcj0iMy4yIiBmaWxsPSIjZWIxOTM5Ii8+CjxjaXJjbGUgY3g9IjU1LjUiIGN5PSI2OSIgcj0iMy4yIiBmaWxsPSIjZWIxOTM5Ii8+Cjwvc3ZnPg==">
 <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22%E1%83%9E%E1%83%98%E1%83%AC%E1%83%99%E1%83%98%E1%83%9C%E1%83%90%22%2C%22short_name%22%3A%22%E1%83%9E%E1%83%98%E1%83%AC%E1%83%99%E1%83%98%E1%83%9C%E1%83%90%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23ffffff%22%2C%22theme_color%22%3A%22%23c0392b%22%7D">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -164,7 +164,21 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; backg
 
 <!-- LOGIN -->
 <div id="login">
-  <div class="logo">🐷</div>
+  <div class="logo" style="font-size:0;margin-bottom:6px">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="80" height="80">
+      <circle cx="50" cy="50" r="50" fill="#eb1939"/>
+      <ellipse cx="50" cy="57" rx="26" ry="28" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+      <path d="M 28 40 Q 20 18 38 14 Q 54 11 51 35" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M 72 40 Q 80 18 62 14 Q 46 11 49 35" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M 57 47 Q 64 32 68 20" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/>
+      <path d="M 51 38 Q 58 23 62 12" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/>
+      <circle cx="40" cy="49" r="3" fill="#fff"/>
+      <circle cx="60" cy="49" r="3" fill="#fff"/>
+      <ellipse cx="50" cy="68" rx="14" ry="11" fill="none" stroke="#fff" stroke-width="4"/>
+      <circle cx="44.5" cy="69" r="3.2" fill="#eb1939"/>
+      <circle cx="55.5" cy="69" r="3.2" fill="#eb1939"/>
+    </svg>
+  </div>
   <div class="brand">პიწკინა</div>
   <div class="ugrid" id="ugrid">
     <!-- filled by JS based on URL -->
