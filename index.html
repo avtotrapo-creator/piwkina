@@ -223,13 +223,19 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; backg
     <!-- COURIER STATS -->
     <div id="courier-stats" style="display:none;background:#fff;border-radius:14px;padding:14px 16px;margin-bottom:14px;box-shadow:0 1px 6px rgba(0,0,0,.05)">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-        <div style="font-size:11px;font-weight:800;color:#bbb;text-transform:uppercase;letter-spacing:.6px">კურიერები</div>
-        <div style="display:flex;gap:6px">
-          <button id="cs-btn-month" onclick="setCsPeriod('month')" style="padding:4px 10px;border-radius:10px;border:none;font-size:11px;font-weight:800;cursor:pointer;background:#c0392b;color:#fff">ამ თვეს</button>
-          <button id="cs-btn-all" onclick="setCsPeriod('all')" style="padding:4px 10px;border-radius:10px;border:none;font-size:11px;font-weight:800;cursor:pointer;background:#f0f0f0;color:#888">სულ</button>
+        <button onclick="toggleCsCollapse()" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:6px;padding:0">
+          <span style="font-size:11px;font-weight:800;color:#bbb;text-transform:uppercase;letter-spacing:.6px">კურიერები</span>
+          <span id="cs-arrow" style="font-size:12px;color:#bbb">▼</span>
+        </button>
+        <div style="display:flex;gap:5px">
+          <button id="cs-btn-today" onclick="setCsPeriod('today')" style="padding:4px 9px;border-radius:10px;border:none;font-size:11px;font-weight:800;cursor:pointer;background:#f0f0f0;color:#888">დღეს</button>
+          <button id="cs-btn-month" onclick="setCsPeriod('month')" style="padding:4px 9px;border-radius:10px;border:none;font-size:11px;font-weight:800;cursor:pointer;background:#c0392b;color:#fff">თვე</button>
+          <button id="cs-btn-all" onclick="setCsPeriod('all')" style="padding:4px 9px;border-radius:10px;border:none;font-size:11px;font-weight:800;cursor:pointer;background:#f0f0f0;color:#888">სულ</button>
         </div>
       </div>
-      <div id="cs-rows"></div>
+      <div id="cs-content">
+        <div id="cs-rows"></div>
+      </div>
     </div>
     <div class="stats" id="dstats" style="display:none;grid-template-columns:1fr 1fr 1fr 1fr">
       <div class="stat"><div class="snum" id="ds-total" style="color:#c0392b">0</div><div class="slbl">სულ</div></div>
@@ -760,22 +766,38 @@ function tabToDate(t){
 }
 
 let csPeriod='month';
+let csCollapsed=localStorage.getItem('cs_collapsed')==='1';
+function toggleCsCollapse(){
+  csCollapsed=!csCollapsed;
+  localStorage.setItem('cs_collapsed',csCollapsed?'1':'0');
+  const c=document.getElementById('cs-content');
+  const arr=document.getElementById('cs-arrow');
+  if(c) c.style.display=csCollapsed?'none':'block';
+  if(arr) arr.textContent=csCollapsed?'▶':'▼';
+}
 function setCsPeriod(p){
   csPeriod=p;
-  const mb=document.getElementById('cs-btn-month');
-  const ab=document.getElementById('cs-btn-all');
-  if(mb){mb.style.background=p==='month'?'#c0392b':'#f0f0f0';mb.style.color=p==='month'?'#fff':'#888';}
-  if(ab){ab.style.background=p==='all'?'#c0392b':'#f0f0f0';ab.style.color=p==='all'?'#fff':'#888';}
+  ['today','month','all'].forEach(k=>{
+    const b=document.getElementById('cs-btn-'+k);
+    if(b){b.style.background=p===k?'#c0392b':'#f0f0f0';b.style.color=p===k?'#fff':'#888';}
+  });
   renderCourierStats();
 }
 function renderCourierStats(){
   const el=document.getElementById('cs-rows'); if(!el) return;
+  const c=document.getElementById('cs-content');
+  const arr=document.getElementById('cs-arrow');
+  if(c) c.style.display=csCollapsed?'none':'block';
+  if(arr) arr.textContent=csCollapsed?'▶':'▼';
+  if(csCollapsed) return;
   const all=load();
   const now=new Date();
   const monthStart=new Date(now.getFullYear(),now.getMonth(),1).getTime();
-  const src=csPeriod==='month'?all.filter(o=>o.id>=monthStart):all;
+  const todayStart=new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime();
+  const src=csPeriod==='today'?all.filter(o=>o.id>=todayStart):
+            csPeriod==='month'?all.filter(o=>o.id>=monthStart):all;
   const couriers=[['ანდრო','🚙'],['ლევანი','🚗'],['ბექა','🚐']];
-  const GEO_MONTHS=['იანვარი','თებერვალი','მარტი','აპრილი','მაისი','ივნისი','ივლისი','აგვისტო','სექტემბერი','ოქტომბერი','ნოემბერი','დეკემბერი'];
+  const GEO_MONTHS=['იანვ','თებ','მარ','აპრ','მაი','ივნ','ივლ','აგვ','სექ','ოქტ','ნოე','დეკ'];
   let html='';
   couriers.forEach(([name,ic],i)=>{
     const assigned=src.filter(o=>o.courier===name);
@@ -796,9 +818,8 @@ function renderCourierStats(){
       </div>
     </div>`;
   });
-  if(csPeriod==='month'){
-    html+=`<div style="font-size:10px;color:#ccc;margin-top:8px;text-align:center">${GEO_MONTHS[now.getMonth()]} ${now.getFullYear()}</div>`;
-  }
+  const lbl=csPeriod==='today'?'დღეს':csPeriod==='month'?GEO_MONTHS[now.getMonth()]+' '+now.getFullYear():'ყველა დრო';
+  html+=`<div style="font-size:10px;color:#ccc;margin-top:8px;text-align:center">${lbl}</div>`;
   el.innerHTML=html;
 }
 
