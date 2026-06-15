@@ -695,6 +695,9 @@ function handleTap(e, id){
 let _dlvId=null;
 function showCourierConfirm(id){
   const o=load().find(x=>x.id===id); if(!o||o.done) return;
+  // courier can only confirm their own assigned orders
+  if(o.courier && o.courier!==me){ alert('ეს შეკვეთა '+o.courier+'ს აქვს მინიჭებული'); return; }
+  if(!o.courier){ alert('შეკვეთა კურიერს არ აქვს მინიჭებული'); return; }
   _dlvId=id;
   const el=document.getElementById('dlv-info');
   let txt='';
