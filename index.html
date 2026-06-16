@@ -433,13 +433,24 @@ function slotBucket(raw){
   if(/\b11\s*[–\-]\s*(1|13)\b/.test(raw)) return 0;
   if(/\b(1|13)\s*[–\-]\s*(3|15)\b/.test(raw)) return 1;
   if(/\b(4|16)\s*[–\-]\s*(6|18)\b/.test(raw)) return 2;
-  const m = raw.match(/\b(\d{1,2})\s*ს/);
+  // სთ or ს suffix (explicit time)
+  const m = raw.match(/\b(\d{1,2})\s*(?:სთ|ს)\b/);
   if(m){
     let h=parseInt(m[1]);
     if(h>=1 && h<=6) h+=12;
-    if(h<=12) return 0;
+    if(h>=9 && h<=13) return 0;
     if(h<=15) return 1;
     return 2;
+  }
+  // HH:MM format
+  const mc = raw.match(/\b(\d{1,2}):(\d{2})\b/);
+  if(mc){ const h=parseInt(mc[1]); if(h>=9&&h<=13) return 0; if(h<=15) return 1; if(h<=18) return 2; }
+  // Bare number on same line as date keyword (დღეს/ხვალ/ზეგ)
+  for(const line of raw.split('\n')){
+    if(/(დღეს|ხვალ|ზეგ)/i.test(line) && !/\d{7,}/.test(line)){
+      const tm=line.match(/\b(9|10|11|12|13|14|15|16|17|18)\b/);
+      if(tm){ const h=parseInt(tm[1]); if(h>=9&&h<=13) return 0; if(h<=15) return 1; return 2; }
+    }
   }
   return 3;
 }
@@ -1083,6 +1094,7 @@ function cardHtml(o, ph, ctag, bcol, showDate, isDuplicate){
     </div>
     <div class="cbot">
       <span class="ctag ${ctag}">${o.courier?(COURIER_CAR[o.courier]||'🚗')+' '+esc(o.courier):'— კურიერი —'}</span>
+      <span style="font-size:10px;color:#aaa;white-space:nowrap">${(()=>{const d=new Date(o.id);return(d.getDate()+'/'+(d.getMonth()+1)).padStart(0)+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')})()}</span>
     </div>
   </div>`;
 }
