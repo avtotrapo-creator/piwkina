@@ -430,27 +430,22 @@ function extractPhone(raw){
   const m=raw.match(/[\d]{9,}/); return m?m[0]:'';
 }
 function slotBucket(raw){
-  // ── ranges (morning 11-1, afternoon 1/2-3, evening 4/5-6) ──────────────────
-  if(/(?<!\.)\b11\s*[–\-]\s*(1|12|13)(?!\.\d)\b/.test(raw)) return 0;           // 11-1, 11-12, 11-13
-  if(/(?<!\.)\b(1|2|13|14)\s*[–\-]\s*(2|3|14|15)(?!\.\d)\b/.test(raw)) return 1; // 1-3, 2-3, 13-15
-  if(/(?<!\.)\b(4|5|16|17)\s*[–\-]\s*(5|6|17|18)(?!\.\d)\b/.test(raw)) return 2; // 4-6, 4-5, 5-6, 16-18
-  // ── single time with სთ or ს (no trailing \b — Georgian chars aren't word chars) ──
+  function pm(h){ return (h>=1&&h<=9)?h+12:h; }
+  function slot(h){ h=pm(h); if(h>=11&&h<13)return 0; if(h>=13&&h<16)return 1; if(h>=16)return 2; return 3; }
+  // range A-B (skip decimals like 5-5.5 or 5.5-6)
+  const rm = raw.match(/(?<![\d.])\b(\d{1,2})\s*[\u2013\-]\s*(\d{1,2})\b(?!\.\d)/);
+  if(rm){ const s=slot(parseInt(rm[1])); if(s<3) return s; }
+  // single time with სთ or ს
   const m = raw.match(/\b(\d{1,2})\s*(?:სთ|ს)/);
-  if(m){
-    let h=parseInt(m[1]);
-    if(h>=1 && h<=6) h+=12;       // 1→13, 2→14, 3→15, 4→16, 5→17, 6→18
-    if(h>=9 && h<=13) return 0;   // morning
-    if(h<=15) return 1;           // afternoon
-    return 2;                     // evening
-  }
-  // ── HH:MM format ────────────────────────────────────────────────────────────
+  if(m){ const s=slot(parseInt(m[1])); if(s<3) return s; }
+  // HH:MM
   const mc = raw.match(/\b(\d{1,2}):(\d{2})\b/);
-  if(mc){ const h=parseInt(mc[1]); if(h>=9&&h<=13) return 0; if(h<=15) return 1; if(h<=18) return 2; }
-  // ── bare number on same line as date keyword ─────────────────────────────────
+  if(mc){ const s=slot(parseInt(mc[1])); if(s<3) return s; }
+  // bare number on date-keyword line
   for(const line of raw.split('\n')){
     if(/(დღეს|ხვალ|ზეგ)/i.test(line) && !/\d{7,}/.test(line)){
-      const tm=line.match(/\b(9|10|11|12|13|14|15|16|17|18)\b/);
-      if(tm){ const h=parseInt(tm[1]); if(h>=9&&h<=13) return 0; if(h<=15) return 1; return 2; }
+      const tm=line.match(/\b(\d{1,2})\b/);
+      if(tm){ const s=slot(parseInt(tm[1])); if(s<3) return s; }
     }
   }
   return 3;
